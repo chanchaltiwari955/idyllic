@@ -1,0 +1,287 @@
+<?php
+
+/**
+ * @file
+ * Creative_innovative theme setting.
+ */
+
+use Drupal\file\Entity\File;
+use Drupal\Core\Form\FormStateInterface;
+
+/**
+ * Hook_form_system_theme_settings_alter.
+ */
+function idyllic_form_system_theme_settings_alter(&$form, FormStateInterface $form_state, $form_id = NULL) {
+          // Contact Fields 
+
+          $form['idyllic_settings']['contanc_details'] = [
+            '#type' => 'details',
+            '#title' => t('Show Contact Details Field'),
+            '#collapsible' => TRUE,
+            '#collapsed' => FALSE,
+          ];
+        
+          $form['idyllic_settings']['contanc_details']['contact_email']['show_email'] = [
+            '#type' => 'checkbox',
+            '#title' => t('Show/Hide Email Id'),
+            '#default_value' => theme_get_setting('show_email'),
+          ];
+        
+        $form['idyllic_settings']['contanc_details']['contact_email']['email_id'] = [
+            '#type' => 'textfield',
+            '#title' => t('Enter Your Email'),
+            '#default_value' => theme_get_setting('email_id','idyllic'),
+            '#description'   => t("Enter your email for show the header right side"),
+          ];
+          $form['idyllic_settings']['contanc_details']['contact']['show_phone_no'] = [
+            '#type' => 'checkbox',
+            '#title' => t('Show/Hide Phone No'),
+            '#default_value' => theme_get_setting('show_phone_no'),
+          ];
+            $form['idyllic_settings']['contanc_details']['contact']['phone_no'] = [
+            '#type' => 'textfield',
+            '#title' => t('Enter Your Phone No'),
+            '#default_value' => theme_get_setting('phone_no','idyllic'),
+            '#description'   => t("Enter your email for show the header right side"),
+          ];
+          
+        //Login Button
+        $form['idyllic_settings']['btn_field'] = [
+          '#type' => 'details',
+          '#title' => t('Button Field'),
+          '#collapsible' => TRUE,
+          '#collapsed' => FALSE,
+        ];
+        
+        $form['idyllic_settings']['btn_field']['btn_url'] = [
+          '#type' => 'textfield',
+          '#title' => t('Button Link'),
+          '#default_value' => theme_get_setting('btn_url'),
+          '#description'   => t("link for button"),
+        ];
+      
+        $form['idyllic_settings']['btn_field']['btn_title'] = [
+          '#type' => 'textfield',
+          '#title' => t('Button Title'),
+          '#default_value' => theme_get_setting('btn_title'),
+          '#description'   => t("Button Title for redirect another page"),
+        ];
+
+
+                //Social Icon Link
+  $form['idyllic_settings']['social_icon'] = [
+    '#type' => 'details',
+    '#title' => t('Show Social Icons'),
+    '#collapsible' => TRUE,
+    '#collapsed' => FALSE,
+  ];
+
+  $form['idyllic_settings']['social_icon']['show_social_icon'] = [
+    '#type' => 'checkbox',
+    '#title' => t('Show/Hide social media links'),
+    '#default_value' => theme_get_setting('show_social_icon'),
+  ];
+
+  $form['idyllic_settings']['social_icon']['whatsapp_url'] = [
+    '#type' => 'textfield',
+    '#title' => t('WhatsApp Link'),
+    '#default_value' => theme_get_setting('whatsapp_url'),
+  ];
+
+  $form['idyllic_settings']['social_icon']['facebook_url'] = [
+    '#type' => 'textfield',
+    '#title' => t('Facebook Link'),
+    '#default_value' => theme_get_setting('facebook_url'),
+  ];
+  $form['idyllic_settings']['social_icon']['instagram_url'] = [
+    '#type' => 'textfield',
+    '#title' => t('Instagram Link'),
+    '#default_value' => theme_get_setting('instagram_url'),
+  ];
+  $form['idyllic_settings']['social_icon']['twitter_url'] = [
+    '#type' => 'textfield',
+    '#title' => t('Twitter Link'),
+    '#default_value' => theme_get_setting('twitter_url'),
+  ];
+  $form['idyllic_settings']['social_icon']['linkedin_url'] = [
+    '#type' => 'textfield',
+    '#title' => t('Linkedin Link'),
+    '#default_value' => theme_get_setting('linkedin_url'),
+  ];
+  $form['idyllic_settings']['social_icon']['youtube_url'] = [
+    '#type' => 'textfield',
+    '#title' => t('Youtube Link'),
+    '#default_value' => theme_get_setting('youtube_url'),
+  ];  
+
+   // copyright field
+   $form['idyllic_settings']['copyright'] = [
+    '#type' => 'details',
+    '#title' => t('Copyright Field'),
+    '#collapsible' => TRUE,
+    '#collapsed' => FALSE,
+  ];
+  $form['idyllic_settings']['copyright']['show_copyright_text'] = [
+    '#type' => 'checkbox',
+    '#title' => t('Show Copyright'),
+    '#default_value' => theme_get_setting('show_copyright_text'),
+    '#description'   => t("Show/Hide Copyright"),
+  ];
+  $form['idyllic_settings']['copyright']['copyright_text'] = [
+    '#type' => 'textarea',
+    '#title' => t('Footer Copyright:'),
+    '#default_value' => theme_get_setting('copyright_text'),
+    '#description' => t("Text area for Copyright Text."),
+  ];
+
+            // scroller details
+            $form['idyllic_settings']['scroll_details'] = [
+              '#type' => 'details',
+              '#title' => t('Scroller Arrow'),
+              '#collapsible' => TRUE,
+              '#collapsed' => FALSE,
+            ];
+            $form['idyllic_settings']['scroll_details']['show_scroll'] = [
+              '#type' => 'checkbox',
+              '#title' => t('Show Scroller'),
+              '#default_value' => theme_get_setting('show_scroll'),
+              '#description'   => t("Show/Hide Scroller Bar"),
+            ];
+
+  // Slide Show
+  if ($form['#attributes']['class'][0] == 'system-theme-settings') {
+    $form['#attached']['library'][] = 'idyllic/theme.setting';
+    $select_limit = [
+      '1' => '1',
+      '2' => '2',
+      '3' => '3',
+      '4' => '4',
+      '5' => '5',
+    ];
+    
+    $form['idyllic_settings']['slide_Show']['display_slide_show'] = [
+      '#type' => 'checkbox',
+      '#title' => t('Show and Hide slides'),
+      '#default_value' => theme_get_setting('display_slide_show'),
+      '#description'   => t("click the check box to show slideshow"),
+      '#attributes' => [
+        'id' => 'show_slide',
+      ],
+    ];
+
+    $form['idyllic_settings']['slide_Show']['display_headline'] = [
+      '#type' => 'textfield',
+      '#title' => t('Title Text'),
+      '#maxlength'=> '8',
+      '#default_value' => theme_get_setting('display_headline'),
+      '#description' => t("Slide title only eight character string available")
+    ];
+  
+    $form['banner']['slide_Show']['no_of_slide'] = [
+      '#type' => 'select',
+      '#title' => t('Select slideshow image limit'),
+      '#default_value' => theme_get_setting('no_of_slide'),
+      '#description'   => t("click the check box to show slideshow banner"),
+      '#options' => $select_limit,
+      '#attributes' => [
+        'id' => 'no_of_slide',
+      ],
+    ];
+  
+    for ($i = 1; $i <= 5; $i++) {
+      $form['banner']['slide_Show']['slide' . $i] = [
+        '#type' => 'fieldset',
+        '#title' => t('Slide @i.', ['@i' => $i]),
+        '#attributes' => [
+          'id' => 'slide' . $i,
+          'class' => 'slide-show',
+        ],
+      ];
+  
+      $form['banner']['slide_Show']['slide' . $i]['slide' . $i . '_image'] = [
+        '#type' => 'managed_file',
+        '#title' => t('Image @i', ['@i' => $i]),
+        '#default_value' => theme_get_setting('slide' . $i . '_image', 'idyllic'),
+        '#upload_location' => 'public://',
+      ];
+
+    }
+
+    $form['#submit'][] = 'idyllic_settings_form_submit';
+    $theme = \Drupal::theme()->getActiveTheme()->getName();
+    $theme_file = drupal_get_path('theme', $theme) . '/idyllic.theme';
+    $build_info = $form_state->getBuildInfo();
+    if (!in_array($theme_file, $build_info['files'])) {
+      $build_info['files'][] = $theme_file;
+    }
+    $form_state->setBuildInfo($build_info);
+  }
+
+  
+
+}
+
+/**
+ * Implements theme_preprocess_page().
+ */
+function idyllic_preprocess_page(&$variables) {
+  $no_of_slide = theme_get_setting('no_of_slide');
+  $slider = [];
+  for ($i = 1; $i <= $no_of_slide; $i++) {
+    $fid = theme_get_setting('slide' . $i . '_image');
+    if (!empty($fid)) {
+      $file = File::load($fid[0]);
+      $uri = $file->getFileUri();
+      $image_path = file_create_url($uri);
+    }
+    else {
+      $image_path = drupal_get_path('theme', 'idyllic') . '/lib/images/slide' . $i . '.jpg';
+    }
+    $slider[$i] = [
+      'image' => $image_path,
+    ];
+  }
+  $variables['show_email'] = theme_get_setting('show_email');
+  $variables['email_id'] = theme_get_setting('email_id');
+  $variables['phone_no'] = theme_get_setting('phone_no');
+  $variables['show_phone_no'] = theme_get_setting('show_phone_no');
+  $variables['btn_url'] = theme_get_setting('btn_url');
+  $variables['btn_title'] = theme_get_setting('btn_title');
+  $variables['contact'] = theme_get_setting('contact');
+  $variables['show_social_icon'] = theme_get_setting('show_social_icon');
+  $variables['whatsapp_url'] = theme_get_setting('whatsapp_url');
+  $variables['facebook_url'] = theme_get_setting('facebook_url');
+  $variables['instagram_url'] = theme_get_setting('instagram_url');
+  $variables['twitter_url'] = theme_get_setting('twitter_url');
+  $variables['linkedin_url'] = theme_get_setting('linkedin_url');
+  $variables['youtube_url'] = theme_get_setting('youtube_url');
+  $variables['display_slide_show'] = theme_get_setting('display_slide_show');
+  $variables['show_copyright_text'] = theme_get_setting('show_copyright_text');
+  $variables['copyright_text'] = theme_get_setting('copyright_text');
+  $variables['show_scroll'] = theme_get_setting('show_scroll');
+  $variables['display_headline'] = theme_get_setting('display_headline');
+  $variables['slide'] = $slider;
+  
+
+}
+
+/**
+ * Hook_settings_form_submit.
+ */
+function idyllic_settings_form_submit(&$form, FormStateInterface $form_state) {
+  $account = \Drupal::currentUser();
+  $values = $form_state->getValues();
+  $slide_no = $values['no_of_slide'];
+  for ($i = 1; $i <= $slide_no; $i++) {
+    if (isset($values["slide{$i}_image"]) && !empty($values["slide{$i}_image"])) {
+      // Load the file via file.fid.
+      if ($file = File::load($values["slide{$i}_image"][0])) {
+        // Change status to permanent.
+        $file->setPermanent();
+        $file->save();
+        $file_usage = \Drupal::service('file.usage');
+        $file_usage->add($file, 'user', 'user', $account->id());
+      }
+    }
+  }
+}

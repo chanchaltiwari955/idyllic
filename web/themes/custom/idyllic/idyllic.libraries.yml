@@ -1,0 +1,14 @@
+global-styling:
+  css:
+    theme:
+      css/style.css: {}
+      /https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css: { external: true }
+  js:
+    https://cdnjs.cloudflare.com/ajax/libs/animejs/2.0.2/anime.min.js: { external: true }
+    https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js: { external: true }
+    js/custom.js: {}
+theme.setting:
+  js:
+    lib/idyllic.js: {}
+  dependencies:
+    - core/jquery
