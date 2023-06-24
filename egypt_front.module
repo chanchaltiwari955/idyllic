@@ -1,0 +1,278 @@
+<?php
+
+/**
+ * @file
+ * This module for egypt front page and config forms.
+ */
+
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Render\Markup;
+
+/**
+ * Implements hook_theme().
+ */
+function egypt_front_theme($existing, $type, $theme, $path) {
+  return [
+    'views_view__egypt_front__egypt_front_content_library' => [
+      'base hook' => 'view',
+      'path' => $path . '/templates/views',
+      'template' => 'views-view--egypt-front--egypt-front-content-library',
+    ],
+    'views_view__egypt_front__egypt_front_publication_library' => [
+      'base hook' => 'view',
+      'path' => $path . '/templates/views',
+      'template' => 'views-view--egypt-front--egypt-front-publication-library',
+    ],
+    'views_view__egypt_front__eu_list' => [
+      'base hook' => 'view',
+      'path' => $path . '/templates/views',
+      'template' => 'views-view--egypt-front--eu-list',
+    ],
+    'pager__egypt_front' => [
+      'base hook' => 'view',
+      'path' => $path . '/templates/views',
+      'template' => 'pager--egypt-front',
+    ],
+
+    'page_EU_support_to_egypt' => [
+      'variables' => [
+        'data' => NULL,
+        'outcome' => NULL,
+        'country' => NULL,
+        'module_path' => NULL,
+      ],
+      'template' => 'page/page--EU-support-to-egypt',
+    ],
+  ];
+}
+
+/**
+ * Implements of egypt_front_preprocess_page() for page template.
+ */
+function egypt_front_preprocess_page(&$variables) {
+  $is_admin = \Drupal::service('router.admin_context')->isAdminRoute();
+  if ($is_admin) {
+    return TRUE;
+  }
+  global $base_url;
+  $negotiator = \Drupal::service('domain.negotiator');
+  $domain = $negotiator->getActiveDomain();
+  if (!empty($domain)) {
+    $domain_id = $domain->id();
+  }
+  $language_name = \Drupal::languageManager()->getCurrentLanguage()->getId();
+  $current_path = \Drupal::service('path.current')->getPath();
+  if ($current_path == '/EU-support-to-egypt' || $current_path == '/latest-EU-Support') {
+    $variables['theme_hook_suggestions'][] = 'page--EU-support-to-egypt';
+    $variables['module_path'] = \Drupal::service('extension.list.module')->getPath('egypt_front');
+    $variables['base_url'] = $base_url;
+
+    // $variables['config'] = egypt_front_configured_data();
+    // Social Share link.
+    $fb = \Drupal::state()->get("facebook_{$domain_id}");
+    $twt = \Drupal::state()->get("twitter_{$domain_id}");
+    $variables['facebook_link'] = !empty($fb) ? $fb : "";
+    $variables['twitter_link'] = !empty($twt) ? $twt : "";
+    $variables['flag_icon_link'] = ($language_name == 'en') ? 'https://eeas.europa.eu/delegations/egypt_en' : 'https://eeas.europa.eu/delegations/egypt_ar';
+    $variables['map_block_title_test'] = 'etwt';
+    // Egypt map country data.
+    $country_list_title = \Drupal::state()->get("country_list_title_{$language_name}_{$domain_id}");
+    $variables['map_block_title'] = !empty($country_list_title) ? $country_list_title : t('Where we work');
+    $map_country_list = egypt_front_map_country_list();
+    $egypt_country_map_data = [];
+    foreach ($map_country_list as $key => $val) {
+      $eg_country_enable = \Drupal::state()->get("eg_country_enable_{$language_name}_{$domain_id}_{$key}");
+      if (!empty($eg_country_enable) && isset($eg_country_enable)) {
+        $eg_country_title = \Drupal::state()->get("eg_country_title_{$language_name}_{$domain_id}_{$key}");
+        $eg_country_description = \Drupal::state()->get("eg_country_description_{$language_name}_{$domain_id}_{$key}");
+        $eg_country_url = \Drupal::state()->get("eg_country_url_{$language_name}_{$domain_id}_{$key}");
+        $egypt_country_map_data[$key]['name'][$language_name] = $eg_country_title;
+        $egypt_country_map_data[$key]['code'] = $key;
+        $egypt_country_map_data[$key]['enabled'] = TRUE;
+        $egypt_country_map_data[$key]['copy'][$language_name] = !empty($eg_country_description['value']) ? $eg_country_description['value'] : "";
+        $egypt_country_map_data[$key]['url'] = !empty($eg_country_url) ? $eg_country_url : '#';
+      }
+      else {
+        $eg_country_title = \Drupal::state()->get("eg_country_title_{$language_name}_{$domain_id}_{$key}");
+        $eg_country_description = \Drupal::state()->get("eg_country_description_{$language_name}_{$domain_id}_{$key}");
+        $eg_country_url = \Drupal::state()->get("eg_country_url_{$language_name}_{$domain_id}_{$key}");
+        $egypt_country_map_data[$key]['name'][$language_name] = !empty($eg_country_title) ? $eg_country_title : ucwords($val);
+        $egypt_country_map_data[$key]['code'] = $key;
+      }
+    }
+
+    $variables['map_data'] = array_values($egypt_country_map_data);
+  }
+}
+
+/**
+ * Function to get loop count.
+ */
+function egypt_front_get_loop_count() {
+
+  return [
+    'start_loop' => 1,
+    'end_loop' => 6,
+  ];
+}
+
+/**
+ * Function to get list of country for egypt domain homepage map.
+ */
+function egypt_front_map_country_list() {
+  return [
+    'EGY1530' => 'Gharbeya',
+    'EGY1531' => 'Ismailia',
+    'EGY1532' => 'Menufiya',
+    'EGY1533' => 'Cairo',
+    'EGY1534' => 'Qaliubiya',
+    'EGY1535' => 'Sharqeya',
+    'EGY1536' => 'Suez',
+    'EGY1537' => 'Daqahleya',
+    'EGY1538' => 'Port Said',
+    'EGY1539' => 'Damietta',
+    'EGY1540' => 'Matrouh',
+    'EGY1541' => 'Beheira',
+    'EGY1542' => 'Fayoum',
+    'EGY1543' => 'Alexandria',
+    'EGY1544' => 'Giza',
+    'EGY1545' => 'Minya',
+    'EGY1546' => 'Beni Suef',
+    'EGY1547' => 'Kafr al-Sheikh',
+    'EGY1548' => 'Aswan',
+    'EGY1549' => 'Assiut',
+    'EGY1550' => 'Al-Wadi al-Gadid',
+    'EGY1551' => 'Qena',
+    'EGY1552' => 'Sohag',
+    'EGY1556' => 'Red Sea',
+    'EGY1557' => 'South Sinai',
+    'EGY1558' => 'North Sinai',
+    'EGY5494' => 'Luxor',
+  ];
+}
+
+/**
+ * Implement ajax call to update data for egypt map data.
+ */
+function egypt_front_ajax_map_country_list_callback(&$form, &$form_state) {
+  $negotiator = \Drupal::service('domain.negotiator');
+  $domain = $negotiator->getActiveDomain();
+  if (!empty($domain)) {
+    $domain_id = $domain->id();
+  }
+  $language_name = \Drupal::languageManager()->getCurrentLanguage()->getId();
+  $country_list_description = \Drupal::state()->get("country_list_description_{$language_name}_{$domain_id}");
+  $form['egypt_map']['country_list_description']['value']['#value'] = !empty($country_list_description['value']) ? $country_list_description['value'] : "";
+
+  $country_list_title = \Drupal::state()->get("country_list_title_{$language_name}_{$domain_id}");
+  $form['egypt_map']['country_list_title']['#value'] = !empty($country_list_title) ? $country_list_title : '';
+
+  $map_country_list = egypt_front_map_country_list();
+  foreach ($map_country_list as $key => $val) {
+    $eg_country_description = \Drupal::state()->get("eg_country_description_{$language_name}_{$domain_id}_{$key}");
+    $form['egypt_map'][$key]['eg_country_description']['value']['#value'] = !empty($eg_country_description['value']) ? $eg_country_description['value'] : "";
+
+    $eg_country_title = \Drupal::state()->get("eg_country_title_{$language_name}_{$domain_id}_{$key}");
+    $form['egypt_map'][$key]['eg_country_title']['#value'] = !empty($eg_country_title) ? $eg_country_title : ucwords($val);
+
+    $eg_country_url = \Drupal::state()->get("eg_country_url_{$language_name}_{$domain_id}_{$key}");
+    $form['egypt_map'][$key]['eg_country_url']['#value'] = !empty($eg_country_url) ? $eg_country_url : '#';
+
+    $eg_country_enable = \Drupal::state()->get("eg_country_enable_{$language_name}_{$domain_id}_{$key}");
+    $form['egypt_map'][$key]['eg_country_enable']['#value'] = !empty($eg_country_enable) ? $eg_country_enable : 0;
+  }
+
+  return $form['egypt_map'];
+}
+
+/**
+ * Implementation of ajax call to get outcomes data based on language changes.
+ *
+ * @param array $form
+ *   Nested array of form elements that comprise the form.
+ * @param array $form_state
+ *   A keyed array containing the current state of the form.
+ */
+function egypt_front_ajax_outcomes_callback(&$form, &$form_state) {
+  $negotiator = \Drupal::service('domain.negotiator');
+  $domain = $negotiator->getActiveDomain();
+  if (!empty($domain)) {
+    $domain_id = $domain->id();
+  }
+  $language_name = \Drupal::languageManager()->getCurrentLanguage()->getId();
+  $count = egypt_front_get_loop_count();
+  for ($i = $count['start_loop']; $i < $count['end_loop']; $i++) {
+    $outcomes_title = \Drupal::state()->get("outcomes_title_{$language_name}_{$domain_id}_{$i}");
+    $form["outcomes"][$i]['outcomes_title']['#value'] = !empty($outcomes_title) ? $outcomes_title : "";
+
+    $outcomes_dec = \Drupal::state()->get("outcomes_dec_{$language_name}_{$domain_id}_{$i}");
+    $form["outcomes"][$i]['description']['value']['#value'] = !empty($outcomes_dec['value']) ? $outcomes_dec['value'] : "";
+  }
+
+  return $form["outcomes"];
+}
+
+/**
+ * Implementation of ajax call to get header config based on language changes.
+ *
+ * @param array $form
+ *   Nested array of form elements that comprise the form.
+ * @param array $form_state
+ *   A keyed array containing the current state of the form.
+ */
+function egypt_front_ajax_main_info(&$form, &$form_state) {
+  $negotiator = \Drupal::service('domain.negotiator');
+  $domain = $negotiator->getActiveDomain();
+  if (!empty($domain)) {
+    $domain_id = $domain->id();
+  }
+  $language_name = \Drupal::languageManager()->getCurrentLanguage()->getId();
+
+  $title = \Drupal::state()->get("eg_mi_title_{$language_name}_{$domain_id}");
+  $descr = \Drupal::state()->get("eg_mi_descr_{$language_name}_{$domain_id}");
+  $form['eg_main_info']['eg_mi_title']['#value'] = !empty($title) ? $title : "";
+  $form['eg_main_info']['eg_mi_descr']['value']['#value'] = !empty($descr) ? $descr : "";
+
+  return $form["eg_main_info"];
+}
+
+/**
+ * Implementation of ajax call to get header config based on language changes.
+ *
+ * @param array $form
+ *   Nested array of form elements that comprise the form.
+ * @param array $form_state
+ *   A keyed array containing the current state of the form.
+ */
+function egypt_front_ajax_eg_header_config(&$form, &$form_state) {
+  $negotiator = \Drupal::service('domain.negotiator');
+  $domain = $negotiator->getActiveDomain();
+  if (!empty($domain)) {
+    $domain_id = $domain->id();
+  }
+  $language_name = \Drupal::languageManager()->getCurrentLanguage()->getId();
+
+  $title = \Drupal::state()->get("eg_title_{$language_name}_{$domain_id}");
+  $subtitle = \Drupal::state()->get("eg_subtitle_{$language_name}_{$domain_id}");
+  $form['eg_header_config']['eg_title']['#value'] = !empty($title) ? $title : "";
+  $form['eg_header_config']['eg_subtitle']['#value'] = !empty($subtitle) ? $subtitle : "";
+
+  return $form["eg_header_config"];
+}
+
+/**
+ * Implements hook_form_alter().
+ */
+function egypt_front_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  if ($form_id == 'views_exposed_form' && $form["#id"] == 'views-exposed-form-egypt-front-eu-list') {
+    $form["title_1"] = [
+      '#type' => 'textfield',
+      '#prefix' => '<div class="views-exposed-widget views-widget-filter-title">',
+      '#suffix' => '</div>',
+    ];
+    $form["field_thematic_area_target_id"]['#prefix'] = Markup::create('<div class="edit-field-thematic-area-tid-wrapper">');
+    $form["field_thematic_area_target_id"]['#suffix'] = '</div>';
+    $form["type_1"]['#prefix'] = Markup::create('<div class="edit-type-1-wrapper">');
+    $form["type_1"]['#suffix'] = '</div>';
+  }
+}

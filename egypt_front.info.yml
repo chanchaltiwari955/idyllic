@@ -1,0 +1,9 @@
+name: UNFPA Offices Egypt Domain
+type: module
+description: 'Custom module for homepage and other configuration for Egypt domain'
+core_version_requirement: ^8.8 || ^9
+configure: admin/unfpa_offices_site_config/egypt_configuration
+package: UNFPA CO Custom
+dependencies:
+  - domain:domain
+  - domain:domain_config

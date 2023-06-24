@@ -1,0 +1,5 @@
+egypt_front.admin:
+  title: 'Egypt Configuration'
+  description: 'Allows admin user to configure UNFPA OFFICES Settings.'
+  parent: unfpa_offices_connection.gui_interface
+  route_name: egypt_front.header_config_form

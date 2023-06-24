@@ -1,0 +1,19 @@
+egypt_front.header_form:
+  route_name: egypt_front.header_config_form
+  title: 'HEADER CONFIGURATION'
+  base_route: egypt_front.header_config_form
+
+egypt_front.main_form_tab:
+  route_name: egypt_front.main_info_form
+  title: 'MAIN INFO'
+  base_route: egypt_front.header_config_form
+
+egypt_front.outcomes_form_tab:
+  route_name: egypt_front.outcomes_form
+  title: 'OUTCOMES CONFIGURATION'
+  base_route: egypt_front.header_config_form
+
+egypt_front.map_form_tab:
+  route_name: egypt_front.map_list_form
+  title: 'MAP DATA'
+  base_route: egypt_front.header_config_form

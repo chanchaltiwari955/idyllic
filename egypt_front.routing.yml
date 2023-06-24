@@ -1,0 +1,38 @@
+egypt_front.header_config_form:
+ path: '/admin/unfpa_offices_site_config/egypt-configuration'
+ defaults:
+   _title: 'Header Config Form'
+   _form: '\Drupal\egypt_front\Form\EgyptHeaderForm'
+ requirements:
+   _permission: 'egypt_front_access'
+
+egypt_front.main_info_form:
+ path: '/admin/unfpa_offices_site_config/egypt-configuration/main'
+ defaults:
+   _title: 'Main Info Form'
+   _form: '\Drupal\egypt_front\Form\MainInfoForm'
+ requirements:
+   _permission: 'egypt_front_access'
+
+egypt_front.map_list_form:
+ path: '/admin/unfpa_offices_site_config/egypt-configuration/map'
+ defaults:
+   _title: 'Map List Form'
+   _form: '\Drupal\egypt_front\Form\MapListForm'
+ requirements:
+   _permission: 'egypt_front_access'
+
+egypt_front.outcomes_form:
+ path: '/admin/unfpa_offices_site_config/egypt-configuration/out-comes'
+ defaults:
+   _title: 'Out comes Form'
+   _form: '\Drupal\egypt_front\Form\OutcomesForm'
+ requirements:
+  _permission: 'egypt_front_access'
+
+egypt_front.eu_support_page:
+ path: '/EU-support-to-egypt'
+ defaults:
+   _controller: '\Drupal\egypt_front\Controller\EgyptFrontController::egypt_front_configured_data'
+ requirements:
+  _permission: 'egypt_front_access'
