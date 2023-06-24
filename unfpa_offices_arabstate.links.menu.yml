@@ -1,0 +1,5 @@
+unfpa_offices_arabstate.admin:
+  title: 'Arabstate Page Configuration'
+  description: 'Allows admin user to configure UNFPA SWEDD Settings.'
+  parent: unfpa_offices_connection.gui_interface
+  route_name: unfpa_offices_arabstate.arabstate_config_form

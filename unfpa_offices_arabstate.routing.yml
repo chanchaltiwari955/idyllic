@@ -1,0 +1,25 @@
+unfpa_offices_arabstate.arabstate_config_form:
+  path: '/admin/unfpa_offices_site_config/arabstate-config'
+  defaults:
+    _form: '\Drupal\unfpa_offices_arabstate\Form\ArabstateConfigSettingsForm'
+    _title: 'Arabstate Page Configurations Settings'
+  requirements:
+    _permission: 'administer site configuration'
+  options:
+    _admin_route: TRUE
+
+unfpa_offices_arabstate.arabstate_form:
+  path: '/admin/unfpa_offices_site_config'
+  defaults:
+    _controller: '\Drupal\system\Controller\SystemController::systemAdminMenuBlockPage'
+    _title: 'Arabstate Page Configurations Settings'
+  requirements:
+    _permission: 'content access'
+
+unfpa_offices_arabstate.design_landing_page:
+  path: '/esp'
+  defaults:
+    _controller: '\Drupal\unfpa_offices_arabstate\Controller\UnfpaDesignController::arabstate_new_design_landing_page'
+    _title: ''
+  requirements:
+    _permission: 'content access'

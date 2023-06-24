@@ -1,0 +1,13 @@
+unfpa_offices_arabstate_libraries:
+  version: 1.x
+  css:
+    theme:
+      asset/style/main.css: { weight: 50 }
+      asset/style/override.css: { weight: 60 }
+  js:
+    asset/script/main.js: {}
+    asset/script/override.js: {}
+  dependencies:
+    - core/jquery
+    - core/drupal
+    - core/drupalSettings

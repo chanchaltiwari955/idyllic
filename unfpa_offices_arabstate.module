@@ -1,0 +1,262 @@
+<?php
+
+/**
+ * @file
+ * Unfpa Module a module or theme's theme implementations as well as other function override as per requirement.
+ */
+
+use Drupal\taxonomy\Entity\Term;
+use Drupal\file\Entity\File;
+use Drupal\paragraphs\Entity\Paragraph;
+use Drupal\taxonomy\Entity\Vocabulary;
+
+/**
+ * Implements hook_theme()
+ */
+function unfpa_offices_arabstate_theme($existing, $type, $theme, $path) {
+  $path = \Drupal::service('module_handler')
+    ->getModule('unfpa_offices_arabstate')
+    ->getPath();
+  return [
+    'page__arabstate_essential_services' => [
+      'variables' => [
+        'data' => NULL,
+        'block' => NULL,
+      ],
+      'template' => 'page--arabstate-essential-services',
+    ],
+    'node__ar_country_detail_page' => [
+      'render element' => 'content',
+      'path' => $path . '/templates/node',
+      'base hook' => 'node',
+      'template' => 'node--ar-country-detail-page',
+    ],
+  ];
+}
+
+/**
+ * Implementation of hook_preprocess_node().
+ * Override or insert variables into node template.
+ */
+function unfpa_offices_arabstate_preprocess_node(&$variables) {
+  $node = \Drupal::routeMatch()->getParameter('node');
+  if ($node->getType() == 'ar_country_detail_page') {
+    // Set breadcrumb for this node.
+    $variables['theme_hook_suggestions'][] = 'node__ar_country_detail_page';
+    $node = $variables['node'];
+    $variables['title'] = $node->get('title')->value;
+    $variables['banner_title'] = $node->get('field_ar_banner_title')->value;
+    $variables['sub_title'] = $node->get('field_ar_sub_title')->value;
+    $variables['facebook_share_title'] = $node->get('field_facebook_share_title')->value;
+    $variables['facebook_share_description'] = $node->get('field_facebook_share_description')->value;
+    $variables['twitter_share_text'] = $node->get('field_twitter_share_text')->value;
+    $variables['facebook_share_image'] = !empty($node->field_facebook_share_image->entity) ? \Drupal::service('file_url_generator')->generateAbsoluteString($node->get('field_facebook_share_image')->entity->getFileUri()) : '';
+
+    $variables['fullUrl'] = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+    $variables['image'] = !empty($node->field_banner_image->entity) ? \Drupal::service('file_url_generator')->generateAbsoluteString($node->get('field_banner_image')->entity->getFileUri()) : '';
+    $variables['body'] = $node->hasField('body') ? $node->get('body')->value : '';
+    $variables['filter_text'] = $node->hasField('field_filter_text') ? $node->get('field_filter_text')->value : '';
+    $variables['country_filter'] = get_filters();
+    $variables['node_type'] = $node->getType();
+    $variables['#attached']['library'][] = 'unfpa_offices_arabstate/unfpa_offices_arabstate_libraries';
+    $category_data = $node->hasField('field_ar_category_details') ? $node->get('field_ar_category_details')->getValue() : '';
+    foreach ($category_data as $ar_category_value) {
+      $entities = Paragraph::load($ar_category_value['target_id']);
+      $field = $entities->get('field_ar_category')->getValue();
+      $term = Term::load($field[0]['target_id']);
+      $category_value = $entities->get('field_ar_category_value')->value;
+      $category_des = $entities->get('field_ar_category_description')->value;
+      $default_title = $entities->get('field_ar_default_title')->value;
+      $category_block1_image_title = $entities->get('field_category_block_1_image_tit')->value;
+      $category_block1_image_des = $entities->get('field_category_block_1_image_des')->value;
+      $category_counter_des = $entities->get('field_ar_counter_description')->value;
+      $category_bottom_image = !empty($entities->field_ar_bottom_image->entity) ? \Drupal::service('file_url_generator')->generateAbsoluteString($entities->get('field_ar_bottom_image')->entity->getFileUri()) : '';
+      $category_bottom_image_title = $entities->get('field_ar_bottom_image_title')->value;
+      $category_bottom_image_description = $entities->get('field_bottom_image_description')->value;
+      $category_block1_image = !empty($entities->field_category_block_1_image->entity) ? \Drupal::service('file_url_generator')->generateAbsoluteString($entities->get('field_category_block_1_image')->entity->getFileUri()) : '';
+
+      $accordion_main_title = $entities->get('field_ar_accordion_title')->getValue();
+      $accordion_detail_block = $entities->get('field_ar_accordian_details')->getValue();
+
+      $field_value_pair = [
+        'sub_title' => ['type' => 'text', 'name' => 'field_ar_accordion_sub_title'],
+        'description' => ['type' => 'text', 'name' => 'field_ar_accordion_description'],
+      ];
+      $accordion_details = _loop_block_paragraph_items($accordion_detail_block, $field_value_pair);
+
+      $block2_detail_page = $entities->hasField('field_category_block_2') ? $entities->get('field_category_block_2')->getValue() : '';
+
+      $field_value_pair = [
+        'image' => ['type' => 'image', 'name' => 'field_ar_h_block1_image'],
+        'description' => ['type' => 'text', 'name' => 'field_ar_block1_description_new'],
+      ];
+      $block2_data = _loop_block_paragraph_items($block2_detail_page, $field_value_pair);
+
+      $block3_detail_page = $entities->hasField('field_category_block_3') ? $entities->get('field_category_block_3')->getValue() : '';
+
+      $field_value_pair = [
+        'image' => ['type' => 'image', 'name' => 'field_ar_h_block1_image'],
+        'description' => ['type' => 'text', 'name' => 'field_ar_block1_description_new'],
+      ];
+      $block3_data = _loop_block_paragraph_items($block3_detail_page, $field_value_pair);
+
+      $block4_detail_page = $entities->hasField('field_field_category_block_4') ? $entities->get('field_field_category_block_4')->getValue() : '';
+
+      $field_value_pair = [
+        'image' => ['type' => 'image', 'name' => 'field_ar_counter_image'],
+        'value' => ['type' => 'text', 'name' => 'field_ar_counter_text'],
+        'text' => ['type' => 'text', 'name' => 'field_ar_counter_text'],
+      ];
+      $block4_data = _loop_block_paragraph_items($block4_detail_page, $field_value_pair);
+
+      $block5_detail_page = $entities->hasField('field_category_block_5') ? $entities->get('field_category_block_5')->getValue() : '';
+
+      $field_value_pair = [
+        'image' => ['type' => 'image', 'name' => 'field_ar_bottom_content_image'],
+        'title' => ['type' => 'text', 'name' => 'field_ar_bottom_content_title'],
+        'body' => ['type' => 'text', 'name' => 'field_ar_bottom_content_body_new'],
+      ];
+      $block5_data = _loop_block_paragraph_items($block5_detail_page, $field_value_pair);
+
+      if (!empty($term)) {
+        if ($term->getName() != '') {
+          $array_key = str_replace(' ', '_', strtolower($term->getName()));
+        }
+        else {
+          $array_key = 'none';
+        }
+      }
+
+      $content_array[$array_key] = [
+        'name' => !empty($term) ? $term->getName() : '',
+        'value' => $category_value,
+        'des' => $category_des,
+        'default_title' => $default_title,
+        'block1_image_title' => $category_block1_image_title,
+        'category_block1_image_des' => $category_block1_image_des,
+        'category_block1_image' => $category_block1_image,
+        'block2_data' => $block2_data,
+        'accordion_main_title' => $accordion_main_title,
+        'accordion_detail' => $accordion_details,
+        'block3_data' => $block3_data,
+        'block4_data' => $block4_data,
+        'category_counter_des' => $category_counter_des,
+        'block5_data' => $block5_data,
+        'category_bottom_image' => $category_bottom_image,
+        'category_bottom_image_title' => $category_bottom_image_title,
+        'category_bottom_image_description' => $category_bottom_image_description,
+      ];
+      $variables['category_data'][] = $content_array[$array_key];
+    }
+
+    $variables['recommendation_title'] = $node->get('field_recommendation_title')->getValue();
+    $variables['recommendation_sub_title'] = $node->get('field_recommendation_sub_title')->getValue();
+    $recommendation_body = !empty($node->hasField('field_recommendation_body')) ? $node->get('field_recommendation_body')->getValue() : '';
+    $recommendation_array = [];
+    if (!empty($recommendation_body)) {
+      foreach ($recommendation_body as $recommendation_dat) {
+        $entities = Paragraph::load($recommendation_dat['target_id']);
+        $recommendation_image = !empty($entities->field_ar_h_block1_image->entity) ? \Drupal::service('file_url_generator')->generateAbsoluteString($entities->get('field_ar_h_block1_image')->entity->getFileUri()) : '';
+        $recommendation_description = $entities->get('field_ar_block1_description_new')->value;
+        $recommendation_array[] = ['image' => $recommendation_image, 'description' => $recommendation_description];
+      }
+    }
+    $variables['recommendation_body'] = $recommendation_array;
+    $report_data = $node->hasField('field_country_report_details') ? $node->get('field_country_report_details')->getValue() : '';
+    $report_array = [];
+    foreach ($report_data as $value) {
+      $report_entity = Paragraph::load($value['target_id']);
+      $pdf = !empty($report_entity->field_ar_country_upload_pdf->entity) ? \Drupal::service('file_url_generator')->generateAbsoluteString($report_entity->get('field_ar_country_upload_pdf')->entity->getFileUri()) : '';
+      $report_name = $report_entity->get('field_ar_country_report_name')->value;
+      $report_array[] = ['report_name' => $report_name, 'pdf' => $pdf];
+    }
+    $variables['report_array'][] = $report_array;
+  }
+
+  return $variables;
+}
+
+/**
+ * Helper function to get paragraph values.
+ */
+function _loop_block_paragraph_items($entities, $field_value_pair) {
+  $paragraph_details = [];
+  if (!empty($entities)) {
+    $i = 0;
+    foreach ($entities as $accordion_detail) {
+      $paragraph_entities = Paragraph::load($accordion_detail['target_id']);
+      foreach ($field_value_pair as $key => $field) {
+        if ($field['type'] == "text") {
+          $paragraph_details[$i][$key] = $paragraph_entities->get($field['name'])->value;
+        }
+        elseif ($field['type'] == 'image') {
+          $paragraph_details[$i][$key] = !empty($paragraph_entities->{$field['name']}->entity) ? \Drupal::service('file_url_generator')->generateAbsoluteString($paragraph_entities->get($field['name'])->entity->getFileUri()) : '';
+        }
+      }
+      $i++;
+    }
+  }
+}
+
+/**
+ * Implementation of hook_preprocess_page().
+ * Override or insert variables into page template.
+ */
+function unfpa_offices_arabstate_preprocess_page(&$variables) {
+  global $base_url;
+  $negotiator = \Drupal::service('domain.negotiator');
+  $domain = $negotiator->getActiveDomain();
+  $domain_id = $domain->id();
+  $user_language = \Drupal::languageManager()
+    ->getCurrentLanguage()
+    ->getId();
+  $path = \Drupal::service('path.current')->getPath();
+  $node = \Drupal::routeMatch()->getParameter('node');
+
+  if ($path == '/esp') {
+    $page_banner_video = !empty(\Drupal::state()->get("page_banner_video_{$user_language}_{$domain_id}")) ? \Drupal::state()->get("page_banner_video_{$user_language}_{$domain_id}") : \Drupal::state()->get("page_banner_video_en_{$domain_id}");
+    // Load the file with the specified ID.
+    if (!empty($page_banner_video)) {
+      $video_file = File::load($page_banner_video[0]);
+      $link_array = $video_file->getFileUri();
+      $variables['home_page_video_url'] = \Drupal::service('file_url_generator')->generateAbsoluteString($link_array);
+    }
+    else {
+      $variables['home_page_video_url'] = '';
+    }
+    $variables['node_type'] = 'ar_landing_page';
+    $variables['project_class'] = 'unfpa-home unfpa-page essential-services-page';
+    $variables['new_logo'] = $base_url . '/' . \Drupal::service('extension.list.module')->getPath('unfpa_offices_arabstate') . '/asset/image/logo.svg';
+  }
+  if (isset($variables['node']) && is_object($variables['node'])) {
+    if ($node->getType() == "ar_country_detail_page" && !\Drupal::service('router.admin_context')->isAdminRoute()) {
+      $variables['banner_title'] = $node->get('field_ar_banner_title')->getValue();
+      $variables['sub_title'] = $node->get('field_ar_sub_title')->getValue();
+      $variables['image'] = !empty($node->field_banner_image->entity) ? \Drupal::service('file_url_generator')->generateAbsoluteString($node->get('field_banner_image')->entity->getFileUri()) : '';
+      $variables['node_type'] = $node->getType();
+      $variables['landing_page_url'] = $base_url . '/' . $user_language . '/esp';
+      $variables['project_class'] = 'unfpa-country unfpa-page';
+      $variables['new_logo'] = $base_url . '/' . \Drupal::service('extension.list.module')->getPath('unfpa_offices_arabstate') . '/asset/image/logo.svg';
+      $variables['#attached']['library'][] = 'unfpa_offices_arabstate/unfpa_offices_arabstate_libraries';
+    }
+    return $variables;
+  }
+}
+
+/**
+ * Country get.
+ */
+function get_filters() {
+  $filters_array = [];
+  $vocabulary = Vocabulary::load('arab_state_country_filters');
+  $terms = \Drupal::entityTypeManager()
+    ->getStorage('taxonomy_term')
+    ->loadTree($vocabulary->id());
+  foreach ($terms as $term_data) {
+    $value = str_replace(' ', '_', strtolower($term_data->name));
+    $filters_array[$term_data->name] = $value;
+  }
+  $order = ['Health' => '', 'Justice and policing' => '', 'Social services' => '', 'Coordination' => ''];
+  $filters_array = array_merge($order, $filters_array);
+  return $filters_array;
+}

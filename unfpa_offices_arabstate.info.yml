@@ -1,0 +1,5 @@
+name: UNFPA Offices Arabstate Domain
+description: Custom module for homepage and other configuration for Arabstate domain.
+type: module
+core_version_requirement: ^9 || ^10
+package: UNFPA

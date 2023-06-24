@@ -1,0 +1,228 @@
+<div id="header"></div>
+{% if data.page_banner_video %}
+<div class="unfpa-home-hero-container">
+	<div class="unfpa-filter-container" id="hero">
+		<div class="unfpa-yt">
+			<div class="unfpa-yt-iframe">
+				<iframe src="{{ data.page_banner_video }}" title="description"></iframe>
+			</div>
+		</div>
+	</div>
+</div>
+{% endif %}
+<div class="unfpa-center-wrapper" id="intro">
+{% for item in data %}
+	{% if item.page_title %}
+    <h1 class="unfpa-heading-01">{{ item.page_title }}</h1>
+  {% endif %}
+	{% if item.page_description %}
+    <p class="unfpa-copy-01">{{ item.page_description|raw }}</p>
+  {% endif %}
+{% endfor %}
+</div>
+<div class="unfpa-filter-container hide" id="filter">
+	<div class="unfpa-center-wrapper">
+		<h5 class="filter-info">{{ 'Select category to filter results for different sectors'|t }}</h5>
+		<div class="mobile-dropdown" id="country-filter">
+			<div class="mobile-dropdown-button">
+				<span class="text">{{ 'Country'|t }}</span>
+				<svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 26 20">
+					<path d="M0 2C0 .9.9 0 2 0h22a2 2 0 110 4H2a2 2 0 01-2-2zM0 10c0-1.1.9-2 2-2h22a2 2 0 110 4H2a2 2 0 01-2-2zM0 18c0-1.1.9-2 2-2h22a2 2 0 110 4H2a2 2 0 01-2-2z"/>
+				</svg>
+			</div>
+			<select>
+				<option disabled selected value="Country">{{ 'Select a country'|t }}</option>
+			</select>
+		</div>
+		<!-- Filters tab start here -->
+		<div class="unfpa-filter">
+			{% if data.country_filter %}
+			<div class="flex">
+				{% for key, val in data.country_filter %}
+				<div class="unfpa-filter-button" data-filter="{{ val }}">{{ key }}</div>
+				{% endfor %}
+			</div>
+			{% endif %}
+			<div class="mobile-dropdown filter-dropdown">
+				<div class="mobile-dropdown-button">
+					<span class="text">{{ 'Topic'|t }}</span>
+					<svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 26 20">
+						<path d="M0 2C0 .9.9 0 2 0h22a2 2 0 110 4H2a2 2 0 01-2-2zM0 10c0-1.1.9-2 2-2h22a2 2 0 110 4H2a2 2 0 01-2-2zM0 18c0-1.1.9-2 2-2h22a2 2 0 110 4H2a2 2 0 01-2-2z"/>
+					</svg>
+				</div>
+				{% if data.country_filter %}
+					<select>
+						<option {% if selected %} {{ selected }} {% endif %} disabled value="Topic">{{'Select a topic'|t }}</option>
+							{% for key, val in data.country_filter %}
+								<option value="{{ val }}">{{ key }}</option>
+							{% endfor %}
+					</select>
+				{% endif %}
+			</div>
+		</div>
+		<!-- Filters tab ends here -->
+	</div>
+</div>
+<div class="unfpa-map-container" id="map">
+	<div id="map-popup">
+		<h5>{{ 'Select country to learn more'|t }}</h5>
+		<p>{{ 'Colours show the level of efforts needed to meet the standards identified by the Essential Service Package.'|t }}</p>
+		<div class="scale">
+			<span class="show-in-mobile">{{ 'Efforts'|t }}</span>
+			<div class="gradient"></div>
+			<div class="scale-texts">
+				<span>{{ 'Very limited efforts needed'|t }}</span>
+				<span>{{ 'Moderate efforts needed'|t }}</span>
+				<span>{{ 'Major efforts needed'|t }}</span>
+			</div>
+		</div>
+		<div id="map-start">{{ 'Start'|t }}</div>
+	</div>
+	<div class="unfpa-map">
+		<div class="unfpa-map-svg">
+			<div class="unfpa-map-placeholder"></div>
+		</div>
+		<div class="unfpa-map-tooltip">
+			<div class="name"></div>
+		</div>
+		<div class="unfpa-center-wrapper unfpa-map-footer">
+			<div class="scale">
+				<div class="gradient"></div>
+				<div class="lines"></div>
+				<div class="scale-texts">
+					<div class="text">
+						<span>{{ 'Very limited efforts'|t }}
+							<span class="hide-on-mobile">{{ 'needed'|t }}</span>
+						</span>
+						<p></p>
+					</div>
+					<div class="text">
+						<span>{{ 'Moderate efforts'|t }}
+							<span class="hide-on-mobile">{{ 'needed'|t }}</span>
+						</span>
+						<p></p>
+					</div>
+					<div class="text">
+						<span>{{ 'Major efforts'|t }}
+							<span class="hide-on-mobile">{{ 'needed'|t }}</span>
+						</span>
+						<p></p>
+					</div>
+				</div>
+			</div>
+		</div>
+		<svg class="defs">
+			<defs>
+				<filter id="shadow-filter">
+					<feDropShadow dx="0" dy="0" stddeviation="2" flood-opacity="0.4"></feDropShadow>
+				</filter>
+			</defs>
+		</svg>
+	</div>
+</div>
+
+<div class="unfpa-center-wrapper" id="overview">
+	{% for row in data %}
+		<h2 class="unfpa-heading-02">{{ row.page_overview_title|raw }}</h2>
+		{{ row.page_overview_description|raw }}
+	{% endfor %}
+	<div class="blocks">
+		{% for item in block %}
+			<div class="block{% if loop.last %} full-block{% endif %}">
+				{% if item.block_image_url is not empty %}
+					<div class="block-bg">
+						<img src="{{ file_url(item.block_image_url) }}" alt="Block-image" srcset="">
+					</div>
+					<div class="block-content">
+						<h3 class="unfpa-heading-03">
+							{{ item.block_title|raw }}
+						</h3>
+						<p>{{ item.block_description|raw }}</p>
+					</div>
+				{% endif %}
+			</div>
+		{% endfor %}
+	</div>
+
+	<div class="graph">
+		{% for map_img in data %}
+			{% if map_img.graph is not empty %}
+				<img src="{{ map_img.graph }}" alt="">
+			{% endif %}
+		{% endfor %}
+	</div>
+</div>
+<div class="unfpa-center-wrapper" id="download">
+	<div class="download-full type-full">
+		<h3 class="unfpa-heading-03">{{ 'Download report'|t }}</h3>
+		<div class="flex">
+			<div class="dropdown-container dropdown-country">
+				<label for="country">{{ 'Select country'|t }}</label>
+				<div class="select-container">
+					<div class="flex">
+						<span class="selected" data-value="country">{{ 'Country'|t }}</span>
+						<svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 17 9">
+							<path fill-rule="evenodd" clip-rule="evenodd" d="M16.3.5L8.5 8.3.7.5h15.6z"/>
+						</svg>
+					</div>
+          {% if data.report_array is not empty %}
+					<select name="country" id="country_dropdown">
+						<option value="country" {{ (country is defined ) ? 'selected' : '' }} disabled>{{ 'Country'|t }}</option>
+            {% for country in data.report_array %}
+						  <option value="{{ country }}">{{ country }}</option>
+            {% endfor %}
+					</select>
+          {% endif %}
+				</div>
+			</div>
+			<div class="dropdown-container dropdown-type">
+				<label for="type">{{ 'Select wich report you want to download'|t }}</label>
+				<div class="select-container">
+					<div class="flex">
+						<span class="selected" data-value="full_report">{{ 'Select Report'|t }}</span>
+						<svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 17 9">
+							<path fill-rule="evenodd" clip-rule="evenodd" d="M16.3.5L8.5 8.3.7.5h15.6z"/>
+						</svg>
+					</div>
+					<select name="type" id="type_dropdown">
+						<option value="full_report" selected>{{ 'Select Report'|t }}</option>
+					</select>
+				</div>
+			</div>
+			<button class="download-btn">
+				<svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 33 27">
+					<path d="M16.23 20.67a1.07 1.07 0 001.55 0l4.9-5.04a1.14 1.14 0 00-.35-1.84 1.07 1.07 0 00-1.2.25l-3.03 3.12V1.13C18.1.5 17.6 0 17 0c-.6 0-1.1.5-1.09 1.12v16.04l-3.04-3.13a1.07 1.07 0 00-1.54 0 1.15 1.15 0 000 1.6l4.9 5.04z"/>
+					<path fill-rule="evenodd" clip-rule="evenodd" d="M30.75 22.13a1.12 1.12 0 112.25 0v3.75c0 .62-.5 1.12-1.13 1.12H1.13C.5 27 0 26.5 0 25.87v-3.75a1.12 1.12 0 112.25 0v2.63h28.5v-2.63.01z"/>
+				</svg>
+				<span class="text">{{ 'Download'|t }}</span>
+			</button>
+		</div>
+	</div>
+</div>
+
+<div class="unfpa-share-modal" data-type="site" data-url="" data-description="" twitter-description="">
+
+	<div class="unfpa-share-modal__background"></div>
+	<div class="unfpa-share-modal__wrapper">
+		<button class="unfpa-button-close unfpa-button-close--grey">
+			<div>
+				<span></span>
+				<span></span>
+			</div>
+		</button>
+		<div class="unfpa-share-modal__info">
+			<img class="unfpa-share-modal__image" src="" alt="">
+			<div class="unfpa-share-modal__copy unfpa-copy-01">
+				{{ facebook_share_description }}
+			</div>
+		</div>
+		<div class="unfpa-share-modal__buttons">
+			<button class="unfpa-button unfpa-button--black">
+				<span class="unfpa-button__copy">{{ 'Share on Facebook'|t }}</span>
+			</button>
+			<button class="unfpa-button unfpa-button--black">
+				<span class="unfpa-button__copy">{{ 'Share on Twitter'|t }}</span>
+			</button>
+		</div>
+	</div>
+</div>

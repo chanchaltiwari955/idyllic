@@ -1,0 +1,357 @@
+<div class="unfpa-center-wrapper default-margin" id="intro">
+	<h1 class="unfpa-heading-01">{{ title }}</h1>
+	{{ body|raw }}
+</div>
+<!--- block 6 Module 10 to be kept after module 2 unfiltered start -->
+{% for key, val in category_data %}
+	{% if val.category_bottom_image_title %}
+		<div class="big-background big-background-color">
+			<div class="unfpa-center-big-wrapper bg" style="background-image: url({{ val.category_bottom_image }})"></div>
+			<div class="unfpa-center-wrapper">
+				<h1>{{ val.category_bottom_image_title|raw }}</h1>
+				<p>{{ val.category_bottom_image_description|raw }}</p>
+			</div>
+		</div>
+	{% endif %}
+{% endfor %}
+<!-- Filters tab starts here -->
+<div class="unfpa-filter-container" id="filter">
+	<div class="unfpa-center-wrapper">
+		{% if category_data %}
+			<span class="filter-info">{{ filter_text }}</span>
+		{% endif %}
+		<div class="unfpa-filter">
+			<div class="flex">
+				{% for key, val in country_filter %}
+					{% if val and category_data %}
+						<div class="unfpa-filter-button {% if loop.first %}active{% endif %}" data-filter="{{ val }}">{{ key }}</div>
+					{% endif %}
+				{% endfor %}
+			</div>
+			<div class="mobile-dropdown filter-dropdown" style="{{ style }}">
+				<div class="mobile-dropdown-button">
+					<span class="text">{{ 'Health'|t }}</span>
+					<svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 26 20">
+						<path d="M0 2C0 .9.9 0 2 0h22a2 2 0 110 4H2a2 2 0 01-2-2zM0 10c0-1.1.9-2 2-2h22a2 2 0 110 4H2a2 2 0 01-2-2zM0 18c0-1.1.9-2 2-2h22a2 2 0 110 4H2a2 2 0 01-2-2z"/>
+					</svg>
+				</div>
+
+				<select>
+					{% for key, val in country_filter %}
+						{% if val and category_data %}
+							<option {% if val == 'health' %} selected {% endif %} value="{{ val }}">{{ key }}</option>
+						{% endif %}
+					{% endfor %}
+				</select>
+
+			</div>
+		</div>
+
+	</div>
+</div>
+<!-- Filters tab ends here -->
+
+<!-- Start Filter-content -->
+<div class="unfpa-center-wrapper default-margin" id="filter-content">
+	{% for key, val in category_data %}
+		<div id="health-info" class="filter-body color-orange" data-filter="{{ key }}">
+			<h1 class="unfpa-heading-01">{{ val.name }}</h1>
+			{{ val.des|raw }}
+			{% if val.block1_image_title %}
+				<div class="big-background default-margin">
+					<div class="unfpa-center-big-wrapper bg" style="background-image: url('{{ val.category_block1_image }})"></div>
+					<div class="unfpa-center-wrapper">
+						<h1>{{ val.block1_image_title }}</h1>
+						<p>{{ val.category_block1_image_des|raw }}</p>
+					</div>
+				</div>
+			{% endif %}
+			<!-- block 2 start -->
+			{% if val.block2_data %}
+					{% for block2 in val.block2_data %}
+						{% set i = 0 %}
+							<div class="unfpa-center-wrapper default-margin image-items image-items-vertical">
+							<div class="image-item">
+								<img src="{{ block2.image }}" alt="" srcset="">
+								<p>{{ block2.description|raw }}</p>
+							</div>
+                {% if i==2 or i==5 or i==8 %}
+							</div>
+              {% endif %}
+					{% endfor %}
+			{% endif %}
+			<!-- block 2 end -->
+			<!-- block accordion start-->
+			{% if val.accordion_detail %}
+				<div class="unfpa-center-wrapper default-margin section-accordion">
+					<h3 class="unfpa-heading-02">{{ val.accordion_main_title.0.value }}</h3>
+					<div class="unfpa-accordion">
+						{% for accordion in val.accordion_detail %}
+							<div class="unfpa-accordion-item">
+								<div class="unfpa-accordion-button">
+									<span>{{ accordion.sub_title }}</span>
+									<svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 19 10">
+										<path fill-rule="evenodd" clip-rule="evenodd" d="M18.7.5L9.5 9.7.3.5h18.4z"/>
+									</svg>
+								</div>
+								<div class="unfpa-accordion-body">
+									{{ accordion.description|raw }}
+								</div>
+							</div>
+						{% endfor %}
+					</div>
+				</div>
+			{% endif %}
+			<!-- block accordion end-->
+
+			<!-- block 3 start -->
+			{% if val.block3_data %}
+				<div class="unfpa-center-wrapper default-margin image-items image-items-horizontal">
+					{% for block3 in val.block3_data %}
+						<div class="image-item">
+							<img src="{{ block3.image }}" alt="" srcset="">
+							<p>{{ block3.description|raw }}</p>
+						</div>
+					{% endfor %}
+				</div>
+			{% endif %}
+			<!-- block 3 end -->
+
+			<!-- block 4 start -->
+			{% if val.block4_data %}
+				<div class="unfpa-stats default-margin">
+					<div class="unfpa-center-wrapper">
+						<div class="unfpa-stats-items">
+							{% for block4_data in val.block4_data %}
+								<div class="unfpa-stats-item">
+									<div class="unfpa-stats-item-content">
+										<figure>
+											<img src="{{ block4_data.image }}" alt="">
+										</figure>
+										<h4 class="unfpa-stats-item-title">{{ block4_data.value }}</h4>
+										<span>{{ block4_data.text }}</span>
+									</div>
+								</div>
+							{% endfor %}
+						</div>
+						<p>{{ val.category_counter_des|raw }}</p>
+					</div>
+				</div>
+			{% endif %}
+
+			<!-- block 4 end -->
+
+			<!--- block 5 start -->
+			{% if val.block5_data %}
+				<div class="unfpa-center-wrapper default-margin unfpa-image-text-items">
+					{% for block5_data in val.block5_data %}
+						<div class="flex">
+							<img src="{{ block5_data.image }}" alt="">
+							<div>
+								<h3 class="unfpa-heading-03">{{ block5_data.title }}</h3>
+								<p>{{ block5_data.body|raw }}</p>
+							</div>
+						</div>
+					{% endfor %}
+				</div>
+			{% endif %}
+			<!-- block 5 end -->
+
+		</div>
+	{% endfor %}
+</div>
+<!-- End filter-content -->
+
+<!-- start unfilter-content -->
+<div class="unfpa-center-wrapper default-margin">
+	{% if category_data.none %}
+		{% set key = 'none' %}
+		{% set val = category_data.none %}
+		<div id="health-info" class="filter-body color-orange">
+			<h1 class="unfpa-heading-01">
+				{% if val.default_title %}
+					{{ val.default_title }}
+				{% else %}
+					{{ 'Overview'|t}}
+				{% endif %}
+			</h1>
+				{{ val.des }}
+				{% if val.block1_image_title %}
+					<div class="big-background default-margin">
+						<div class="unfpa-center-big-wrapper bg" style="background-image: url({{ val.category_block1_image }})"></div>
+						<div class="unfpa-center-wrapper">
+							<h1>{{ val.block1_image_title }}</h1>
+							<p>{{ val.category_block1_image_des }}</p>
+						</div>
+					</div>
+				{% endif %}
+				<!-- block 2 start -->
+				{% if val.block2_data %}
+					{% for block2 in val.block2_data %}
+						{% set i= 0 %}
+						  {% if j == i %}
+							<div class="unfpa-center-wrapper default-margin image-items image-items-vertical">
+							{% endif %}
+
+							<div class="image-item">
+								<img src="{{ block2.image }}" alt="" srcset="">
+								<p>{{ block2.description|raw }}</p>
+							</div>
+							{% if i==2 or i==5 or i==8 %}
+							</div>
+						  {% endif %}
+					{% endfor %}
+				{% endif %}
+				<!-- block 2 end -->
+				<!-- block accordion start-->
+				{% if val.accordion_detail %}
+					<div class="unfpa-center-wrapper default-margin section-accordion">
+						<h3 class="unfpa-heading-02">{{ val.accordion_main_title }}</h3>
+						<div class="unfpa-accordion">
+							{% for accordion in val.accordion_detail %}
+								<div class="unfpa-accordion-item">
+									<div class="unfpa-accordion-button">
+										<span>{{ accordion.sub_title }}</span>
+										<svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 19 10">
+											<path fill-rule="evenodd" clip-rule="evenodd" d="M18.7.5L9.5 9.7.3.5h18.4z"/>
+										</svg>
+									</div>
+									<div class="unfpa-accordion-body">
+										{{ accordion.description|raw }}
+									</div>
+								</div>
+							{% endfor %}
+						</div>
+					</div>
+				{% endif %}
+				<!-- block accordion end-->
+
+				<!---- block 3 start ---->
+				{% if val.block3_data %}
+					<div class="unfpa-center-wrapper default-margin image-items image-items-horizontal">
+						{% for block3 in val.block3_data.0 %}
+							<div class="image-item">
+								<img src="{{ block3.image }}" alt="" srcset="">
+								<p>{{ block3.description|raw }}</p>
+							</div>
+						{% endfor %}
+					</div>
+				{% endif %}
+				<!--- block 3 end ----->
+
+				<!---- block 4 start ---->
+				{% if val.block4_data %}
+					<div class="unfpa-stats default-margin">
+						<div class="unfpa-center-wrapper">
+							<div class="unfpa-stats-items">
+								{% for block4_data in val.block4_data %}
+									<div class="unfpa-stats-item">
+										<div class="unfpa-stats-item-content">
+											<figure>
+												<img src="{{ block4_data.image }}" alt="">
+											</figure>
+											<h4 class="unfpa-stats-item-title">{{ block4_data.value }}</h4>
+											<span>{{ block4_data.text }}</span>
+										</div>
+									</div>
+								{% endfor %}
+							</div>
+							<p>{{ val.category_counter_des }}</p>
+						</div>
+					</div>
+				{% endif %}
+
+				<!---- block 4 end ---->
+
+				<!----- block 5 start ---->
+				{% if val.block5_data %}
+					<div class="unfpa-center-wrapper default-margin unfpa-image-text-items">
+						{% for block5_data in val.block5_data %}
+							<div class="flex">
+								<img src="{{ block5_data.image }}" alt="">
+								<div>
+									<h3 class="unfpa-heading-03">{{ block5_data.title }}</h3>
+									<p>{{ block5_data.body }}</p>
+								</div>
+							</div>
+						{% endfor %}
+					</div>
+				{% endif %}
+				<!--- block 5 end --->
+
+			</div>
+		{% endif %}
+	</div>
+	<!- End unfilter-content -->
+
+	{% if recommendation_body is not empty %}
+		<div class="unfpa-recomendations unfpa-center-wrapper default-margin">
+			<h2 class="unfpa-heading-02">{{ recommendation_title }}</h2>
+			<p class="unfpa-copy-01">{{ recommendation_sub_title }}</p>
+			{% for re_data in recommendation_body %}
+				<div class="unfpa-recomendations-item">
+					<img src="{{ re_data.image }}" alt="" srcset="">
+					<div class="unfpa-copy-01">{{ re_data.description|raw }}</div>
+				</div>
+			{% endfor %}
+		</div>
+	{% endif %}
+
+	<div class="download-full type-country">
+		{% if report_array is not empty %}
+			<h3 class="unfpa-heading-03">{{ 'Download report'|t }}</h3>
+			<div class="flex">
+				<div class="dropdown-container dropdown-country">
+					<label for="country">{{ 'Select country'|t }}</label>
+					<select name="country" id="">
+						<option value="Country" selected disabled>{{ 'Country'|t }}</option>
+					</select>
+				</div>
+				<div class="dropdown-container dropdown-type">
+					<label for="type">{{ 'Select wich report you want to download'|t }}</label>
+					<div class="select-container">
+						<div class="flex">
+							<span class="selected" data-value="full_report">{{ 'Select Report'|t }}</span>
+							<svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 17 9">
+								<path fill-rule="evenodd" clip-rule="evenodd" d="M16.3.5L8.5 8.3.7.5h15.6z"/>
+							</svg>
+						</div>
+						<select name="type" id="">
+							<option value="Select Report" selected>{{ 'Select Report'|t }}</option>
+							{% for key, report_data in report_array.0 %}
+								<option value="{{ report_data.pdf }}">{{ report_data.report_name }}</option>
+							{% endfor %}
+						</select>
+					</div>
+
+				</div>
+				<button class="download-btn">
+					<svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 33 27">
+						<path d="M16.23 20.67a1.07 1.07 0 001.55 0l4.9-5.04a1.14 1.14 0 00-.35-1.84 1.07 1.07 0 00-1.2.25l-3.03 3.12V1.13C18.1.5 17.6 0 17 0c-.6 0-1.1.5-1.09 1.12v16.04l-3.04-3.13a1.07 1.07 0 00-1.54 0 1.15 1.15 0 000 1.6l4.9 5.04z"/>
+						<path fill-rule="evenodd" clip-rule="evenodd" d="M30.75 22.13a1.12 1.12 0 112.25 0v3.75c0 .62-.5 1.12-1.13 1.12H1.13C.5 27 0 26.5 0 25.87v-3.75a1.12 1.12 0 112.25 0v2.63h28.5v-2.63.01z"/>
+					</svg>
+					<span class="text">{{ 'Download'|t }}</span>
+				</button>
+			</div>
+		{% endif %}
+	</div>
+
+</div><div class="unfpa-share-modal" data-type="site" data-url="{{ fullUrl }}" data-description="{{ facebook_share_description }}" twitter-description="{{ twitter_share_text }}"><div class="unfpa-share-modal__background"></div><div class="unfpa-share-modal__wrapper">
+<button class="unfpa-button-close unfpa-button-close--grey">
+	<div>
+		<span></span>
+		<span></span>
+	</div>
+</button>
+<div class="unfpa-share-modal__info">
+	<img class="unfpa-share-modal__image" src="{{ facebook_share_image }}" alt="">
+	<div class="unfpa-share-modal__copy unfpa-copy-01">{{ facebook_share_description }}</div>
+</div>
+<div class="unfpa-share-modal__buttons">
+	<button class="unfpa-button unfpa-button--black">
+		<span class="unfpa-button__copy">{{ 'Share on Facebook'|t }}</span>
+	</button>
+	<button class="unfpa-button unfpa-button--black">
+		<span class="unfpa-button__copy">{{ 'Share on Twitter'|t }}</span>
+	</button>
+</div></div></div>
